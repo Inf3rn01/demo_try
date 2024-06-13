@@ -3,14 +3,14 @@ from src.database.database_manager import DBManager
 from src.pages.login_form import LoginForm
 from src.pages.registration_form import RegistrationForm
 from settings import DB_PATH
+from src.pages.main_window import MainWindow
 
 
 def main(page: ft.Page):
     db_manager = DBManager(DB_PATH)
 
     def navigate_to_main_window():
-        from src.pages import main_window
-        main_window.main_window(page)  # Переходим на главное окно
+        MainWindow(page)  # Переходим на главное окно
 
     def show_login_page():
         page.controls.clear()  # Очищаем текущие элементы страницы

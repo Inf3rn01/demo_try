@@ -91,6 +91,14 @@
         "documentation": {}
     },
     {
+        "label": "MainWindow",
+        "importPath": "src.pages.main_window",
+        "description": "src.pages.main_window",
+        "isExtraImport": true,
+        "detail": "src.pages.main_window",
+        "documentation": {}
+    },
+    {
         "label": "DBManager",
         "kind": 6,
         "importPath": "src.database.database_manager",
@@ -136,11 +144,11 @@
         "documentation": {}
     },
     {
-        "label": "main_window",
+        "label": "MainWindow",
         "kind": 2,
         "importPath": "src.pages.main_window",
         "description": "src.pages.main_window",
-        "peekOfCode": "def main_window(page: ft.Page):\n    page.title = \"Главное окно\"\n    page.controls.clear()\n    page.appbar = ft.AppBar(\n        title=ft.Text(\"Главное окно\"),\n        center_title=True,\n        bgcolor=ft.colors.SURFACE_VARIANT,\n    )\n    page.add(ft.Text(\"Добро пожаловать в главное окно!\"))\n    page.update()  # Обновляем страницу для отображения изменений",
+        "peekOfCode": "def MainWindow(page: ft.Page):\n    page.title = \"Главное окно\"\n    page.controls.clear()\n    page.appbar = ft.AppBar(\n        title=ft.Text(\"Главное окно\"),\n        center_title=True,\n        bgcolor=ft.colors.SURFACE_VARIANT,\n    )\n    page.add(ft.Text(\"Добро пожаловать в главное окно!\"))\n    page.update()  # Обновляем страницу для отображения изменений",
         "detail": "src.pages.main_window",
         "documentation": {}
     },
@@ -158,7 +166,7 @@
         "kind": 2,
         "importPath": "client",
         "description": "client",
-        "peekOfCode": "def main(page: ft.Page):\n    db_manager = DBManager(DB_PATH)\n    def navigate_to_main_window():\n        from src.pages import main_window\n        main_window.main_window(page)  # Переходим на главное окно\n    def show_login_page():\n        page.controls.clear()  # Очищаем текущие элементы страницы\n        page.appbar = ft.AppBar(\n            title=ft.Text(\"Логин\"),\n            center_title=True,",
+        "peekOfCode": "def main(page: ft.Page):\n    db_manager = DBManager(DB_PATH)\n    def navigate_to_main_window():\n        MainWindow(page)  # Переходим на главное окно\n    def show_login_page():\n        page.controls.clear()  # Очищаем текущие элементы страницы\n        page.appbar = ft.AppBar(\n            title=ft.Text(\"Логин\"),\n            center_title=True,\n            bgcolor=ft.colors.SURFACE_VARIANT,",
         "detail": "client",
         "documentation": {}
     },

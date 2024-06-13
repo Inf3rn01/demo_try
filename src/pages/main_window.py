@@ -1,6 +1,6 @@
 import flet as ft
 
-def main_window(page: ft.Page):
+def MainWindow(page: ft.Page):
     page.title = "Главное окно"
     page.controls.clear()
     page.appbar = ft.AppBar(
