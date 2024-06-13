@@ -1,1 +1,1 @@
-DB_PATH = '../src/database/college.db'
+DB_PATH = './src/database/college.db'

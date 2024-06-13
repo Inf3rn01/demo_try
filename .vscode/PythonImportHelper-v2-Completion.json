@@ -35,10 +35,18 @@
     },
     {
         "label": "DBManager",
-        "importPath": "database_manager",
-        "description": "database_manager",
+        "importPath": "src.database.database_manager",
+        "description": "src.database.database_manager",
         "isExtraImport": true,
-        "detail": "database_manager",
+        "detail": "src.database.database_manager",
+        "documentation": {}
+    },
+    {
+        "label": "DBManager",
+        "importPath": "src.database.database_manager",
+        "description": "src.database.database_manager",
+        "isExtraImport": true,
+        "detail": "src.database.database_manager",
         "documentation": {}
     },
     {
@@ -60,18 +68,10 @@
     },
     {
         "label": "register",
-        "importPath": "database.database_operations",
-        "description": "database.database_operations",
+        "importPath": "src.database.database_operations",
+        "description": "src.database.database_operations",
         "isExtraImport": true,
-        "detail": "database.database_operations",
-        "documentation": {}
-    },
-    {
-        "label": "DBManager",
-        "importPath": "src.database.database_manager",
-        "description": "src.database.database_manager",
-        "isExtraImport": true,
-        "detail": "src.database.database_manager",
+        "detail": "src.database.database_operations",
         "documentation": {}
     },
     {
@@ -113,7 +113,7 @@
         "kind": 2,
         "importPath": "src.database.database_operations",
         "description": "src.database.database_operations",
-        "peekOfCode": "def check_login(db_manager: DBManager, login: str, password: str):\n    query = \"SELECT id, name, post_id FROM users WHERE login = ? AND password = ?\"\n    params = (login, password)\n    result = db_manager.execute(query, params)\n    if result['code'] == 200 and result['data']:\n        user_id, name, post_id = result['data'][0]\n        return {\"id\": user_id, \"name\": name, \"post_id\": post_id}\n    else:\n        return None\ndef register(db_manager: DBManager, name: str, login: str, password: str):",
+        "peekOfCode": "def check_login(db_manager: DBManager, login: str, password: str):\n    query = \"SELECT UserID, TypeID FROM Users WHERE login = ? AND password = ?\" # UserID = id, TypeID = post_id\n    params = (login, password)\n    result = db_manager.execute(query, params)\n    if result['code'] == 200 and result['data']:\n        UserID, TypeID = result['data'][0]\n        return {\"id\": UserID, \"post_id\": TypeID}\n    else:\n        return None\ndef register(db_manager: DBManager, name: str, login: str, password: str):",
         "detail": "src.database.database_operations",
         "documentation": {}
     },
@@ -122,7 +122,7 @@
         "kind": 2,
         "importPath": "src.database.database_operations",
         "description": "src.database.database_operations",
-        "peekOfCode": "def register(db_manager: DBManager, name: str, login: str, password: str):\n    query = \"INSERT INTO users (name, login, password) VALUES (?, ?, ?)\"\n    params = (name, login, password)\n    result = db_manager.execute(query, params, many=False)\n    if result['code'] == 200:\n        print(\"Registration successful\")\n        return True\n    else:\n        print(\"Registration failed\")\n        return False",
+        "peekOfCode": "def register(db_manager: DBManager, name: str, login: str, password: str):\n    query = \"INSERT INTO users (fio, login, password) VALUES (?, ?, ?)\"\n    params = (name, login, password)\n    result = db_manager.execute(query, params, many=False)\n    if result['code'] == 200:\n        print(\"Registration successful\")\n        return True\n    else:\n        print(\"Registration failed\")\n        return False",
         "detail": "src.database.database_operations",
         "documentation": {}
     },
@@ -131,8 +131,17 @@
         "kind": 6,
         "importPath": "src.pages.login_form",
         "description": "src.pages.login_form",
-        "peekOfCode": "class LoginForm(ft.UserControl):\n    def __init__(self, db_manager, go_to_registration):\n        super().__init__()\n        self.db_manager = db_manager\n        self.go_to_registration = go_to_registration\n    def build(self):\n        self.appbar = ft.AppBar(\n            title=ft.Text(\"Вход\"),\n        )\n        self.loginField = ft.TextField(label=\"Логин\")",
+        "peekOfCode": "class LoginForm(ft.UserControl):\n    def __init__(self, db_manager, navigate_to_registration, navigate_to_main_window):\n        super().__init__()\n        self.db_manager = db_manager\n        self.navigate_to_registration = navigate_to_registration\n        self.navigate_to_main_window = navigate_to_main_window\n    def build(self):\n        self.loginField = ft.TextField(label=\"Логин\", on_change=self.validate)\n        self.passwordField = ft.TextField(label=\"Пароль\", password=True, on_change=self.validate)\n        self.login_button = ft.ElevatedButton(text=\"Войти\", on_click=self.login_clicked, disabled=True)",
         "detail": "src.pages.login_form",
+        "documentation": {}
+    },
+    {
+        "label": "main_window",
+        "kind": 2,
+        "importPath": "src.pages.main_window",
+        "description": "src.pages.main_window",
+        "peekOfCode": "def main_window(page: ft.Page):\n    page.title = \"Главное окно\"\n    page.controls.clear()\n    page.appbar = ft.AppBar(\n        title=ft.Text(\"Главное окно\"),\n        center_title=True,\n        bgcolor=ft.colors.SURFACE_VARIANT,\n    )\n    page.add(ft.Text(\"Добро пожаловать в главное окно!\"))\n    page.update()  # Обновляем страницу для отображения изменений",
+        "detail": "src.pages.main_window",
         "documentation": {}
     },
     {
@@ -140,7 +149,7 @@
         "kind": 6,
         "importPath": "src.pages.registration_form",
         "description": "src.pages.registration_form",
-        "peekOfCode": "class RegistrationForm(ft.UserControl):\n    def __init__(self, db_manager, go_to_login):\n        super().__init__()\n        self.db_manager = db_manager\n        self.go_to_login = go_to_login\n    def build(self):\n        self.appbar = ft.AppBar(\n            title=ft.Text(\"Регистрация\"),\n            leading=ft.IconButton(\n                icon=ft.icons.ARROW_BACK,",
+        "peekOfCode": "class RegistrationForm(ft.UserControl):\n    def __init__(self, db_manager, navigate_to_login, navigate_to_main_window):\n        super().__init__()\n        self.db_manager = db_manager\n        self.navigate_to_main_window = navigate_to_main_window\n        self.navigate_to_login = navigate_to_login\n    def build(self):\n        self.usernameField = ft.TextField(label=\"Имя пользователя\", on_change=self.validate)\n        self.loginField = ft.TextField(label=\"Логин\", on_change=self.validate)\n        self.passwordField = ft.TextField(label=\"Пароль\", password=True, on_change=self.validate)",
         "detail": "src.pages.registration_form",
         "documentation": {}
     },
@@ -149,7 +158,7 @@
         "kind": 2,
         "importPath": "client",
         "description": "client",
-        "peekOfCode": "def main(page: ft.Page):\n    db_manager = DBManager(DB_PATH)\n    # Функция для перехода на страницу логина\n    def go_to_login(e):\n        page.go('/login')\n    # Функция для перехода на страницу регистрации\n    def go_to_registration(e):\n        page.go('/registration')\n    # Определяем маршруты\n    def route_change(route):",
+        "peekOfCode": "def main(page: ft.Page):\n    db_manager = DBManager(DB_PATH)\n    def navigate_to_main_window():\n        from src.pages import main_window\n        main_window.main_window(page)  # Переходим на главное окно\n    def show_login_page():\n        page.controls.clear()  # Очищаем текущие элементы страницы\n        page.appbar = ft.AppBar(\n            title=ft.Text(\"Логин\"),\n            center_title=True,",
         "detail": "client",
         "documentation": {}
     },
@@ -158,7 +167,7 @@
         "kind": 5,
         "importPath": "settings",
         "description": "settings",
-        "peekOfCode": "DB_PATH = '../src/database/college.db'",
+        "peekOfCode": "DB_PATH = './src/database/college.db'",
         "detail": "settings",
         "documentation": {}
     }

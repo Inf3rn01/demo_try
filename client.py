@@ -4,29 +4,37 @@ from src.pages.login_form import LoginForm
 from src.pages.registration_form import RegistrationForm
 from settings import DB_PATH
 
+
 def main(page: ft.Page):
     db_manager = DBManager(DB_PATH)
 
-    # Функция для перехода на страницу логина
-    def go_to_login(e):
-        page.go('/login')
+    def navigate_to_main_window():
+        from src.pages import main_window
+        main_window.main_window(page)  # Переходим на главное окно
 
-    # Функция для перехода на страницу регистрации
-    def go_to_registration(e):
-        page.go('/registration')
+    def show_login_page():
+        page.controls.clear()  # Очищаем текущие элементы страницы
+        page.appbar = ft.AppBar(
+            title=ft.Text("Логин"),
+            center_title=True,
+            bgcolor=ft.colors.SURFACE_VARIANT,
+        )
+        login_form = LoginForm(db_manager, show_registration_page, navigate_to_main_window)
+        page.add(login_form)  # Добавляем форму логина на страницу
+        page.update()  # Обновляем страницу для отображения изменений
 
-    # Определяем маршруты
-    def route_change(route):
-        page.controls.clear()
-        if page.route == '/login':
-            page.controls.append(LoginForm(db_manager, go_to_registration=go_to_registration))
-        else:
-            page.controls.append(RegistrationForm(db_manager, go_to_login=go_to_login))
-        page.update()
+    def show_registration_page():
+        page.controls.clear()  # Очищаем текущие элементы страницы
+        page.appbar = ft.AppBar(
+            title=ft.Text("Регистрация"),
+            center_title=True,
+            bgcolor=ft.colors.SURFACE_VARIANT,
+            leading=ft.IconButton(ft.icons.ARROW_BACK, on_click=lambda _: show_login_page())  # Кнопка для возврата
+        )
+        registration_form = RegistrationForm(db_manager, show_login_page, navigate_to_main_window)
+        page.add(registration_form)  # Добавляем форму регистрации на страницу
+        page.update()  # Обновляем страницу для отображения изменений
 
-    # Устанавливаем начальный маршрут
-    page.on_route_change = route_change
-    page.go('/login')
+    show_login_page()  # Начальная загрузка страницы логина
 
-if __name__ == '__main__':
-    ft.app(target=main)
+ft.app(target=main)

@@ -2,39 +2,36 @@ import flet as ft
 from src.database.database_operations import check_login
 
 class LoginForm(ft.UserControl):
-    def __init__(self, db_manager, go_to_registration):
+    def __init__(self, db_manager, navigate_to_registration, navigate_to_main_window):
         super().__init__()
         self.db_manager = db_manager
-        self.go_to_registration = go_to_registration
+        self.navigate_to_registration = navigate_to_registration
+        self.navigate_to_main_window = navigate_to_main_window
 
     def build(self):
-        self.appbar = ft.AppBar(
-            title=ft.Text("Вход"),
-        )
-        self.loginField = ft.TextField(label="Логин")
-        self.passwordField = ft.TextField(label="Пароль", password=True)
+        self.loginField = ft.TextField(label="Логин", on_change=self.validate)
+        self.passwordField = ft.TextField(label="Пароль", password=True, on_change=self.validate)
         self.login_button = ft.ElevatedButton(text="Войти", on_click=self.login_clicked, disabled=True)
-        self.register_button = ft.ElevatedButton(text="Зарегистрироваться", on_click=self.register_clicked)
-        return ft.Column(controls=[
-            self.login,
-            self.password,
-            self.login_button,
-            self.register_button
-        ])
+        self.register_button = ft.ElevatedButton(text="Зарегистрироваться", on_click=lambda _: self.navigate_to_registration())
+
+        return ft.Column(
+            controls=[
+                self.loginField,
+                self.passwordField,
+                self.login_button,
+                self.register_button
+            ],
+            horizontal_alignment=ft.CrossAxisAlignment.CENTER,
+        )
 
     def validate(self, e):
-        if all([self.loginField.value, self.passwordField.value]):
-            self.login_button.disabled = False
-        else:
-            self.login_button.disabled = True
+        self.login_button.disabled = not (self.loginField.value and self.passwordField.value)
+        self.update()
 
     def login_clicked(self, e):
-        user = check_login(self.db_manager, self.login.value, self.password.value)
+        user = check_login(self.db_manager, self.loginField.value, self.passwordField.value)
         if user:
-            print(f"User ID: {user['id']}, Name: {user['name']}, Post ID: {user['post_id']}")
-            # Здесь можно добавить переход на следующую страницу или обновление интерфейса
+            print(f"User ID: {user['id']}")
+            self.navigate_to_main_window()  # Переход на главное окно
         else:
             print("Login failed")
-
-    def register_clicked(self, e):
-        self.go_to_registration(e)
